@@ -1,39 +1,21 @@
-import { MongoClient } from 'mongodb'
+import { Collection, Db, MongoClient } from 'mongodb'
+
 import dns from 'node:dns'
 import dotenv from 'dotenv'
+import User from '~/models/schemas/User.schema'
 
 dns.setServers(['8.8.8.8'])
 dotenv.config()
 
 const uri = `mongodb+srv://${process.env.DB_USERNAME}:${process.env.DB_PASSWORD}@cluster-twitter-dev.tytn42p.mongodb.net/?appName=cluster-twitter-dev`
 
-// Create a MongoClient with a MongoClientOptions object to set the Stable API version
-// const client = new MongoClient(uri, {
-//   serverApi: {
-//     version: ServerApiVersion.v1,
-//     strict: true,
-//     deprecationErrors: true
-//   }
-// })
-
-// export async function run() {
-//   try {
-//     // Connect the client to the server	(optional starting in v4.7)
-//     await client.connect()
-//     // Send a ping to confirm a successful connection
-//     await client.db('admin').command({ ping: 1 })
-//     console.log('Pinged your deployment. You successfully connected to MongoDB! 222')
-//   } finally {
-//     // Ensures that the client will close when you finish/error
-//     await client.close()
-//   }
-// }
-
 class DatabaseServices {
   private client: MongoClient
+  private db: Db
 
   constructor() {
     this.client = new MongoClient(uri)
+    this.db = this.client.db(process.env.DB_NAME)
   }
 
   async connect() {
@@ -41,11 +23,15 @@ class DatabaseServices {
       // Connect the client to the server	(optional starting in v4.7)
       await this.client.connect()
       // Send a ping to confirm a successful connection
-      await this.client.db('admin').command({ ping: 1 })
+      await this.db.command({ ping: 1 })
       console.log('Pinged your deployment. You successfully connected to MongoDB! 2222')
-    } finally {
-      await this.client.close()
+    } catch (error) {
+      console.log(error)
     }
+  }
+
+  get users(): Collection<User> {
+    return this.db.collection(process.env.DB_USERS_COLLECTION as string)
   }
 }
 
