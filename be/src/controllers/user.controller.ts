@@ -1,30 +1,39 @@
 import { type Request, type Response } from 'express'
 import { MongoServerError } from 'mongodb'
+import { LoginReqBody, RegisterReqBody } from '~/requests/User.requests'
 import usersService from '~/services/users.services'
 
-export const loginController = (req: Request, res: Response) => {
-  const { email, password } = req.body
-
-  if (email === 'ndtoan@gmail.com' && password === '123123') {
-    return res.json({
-      message: 'Login success'
-    })
-  }
-  res.json({
-    message: 'Login failed'
-  })
-}
-
-export const registerController = async (req: Request, res: Response) => {
+export const loginController = async (req: Request<{}, {}, LoginReqBody>, res: Response) => {
   const { email, password } = req.body
 
   try {
-    const result = await usersService.register({ email, password })
+    const result = await usersService.login({ email, password })
+    return res.status(200).json({
+      message: 'Login success',
+      result
+    })
+  } catch (error) {
+    console.log('err', error)
+    if (error instanceof MongoServerError) {
+      console.log(error)
+    }
+    return res.status(400).json({
+      message: 'Login failed'
+    })
+  }
+}
+
+export const registerController = async (req: Request<{}, {}, RegisterReqBody>, res: Response) => {
+  const { email, password, confirm_password, username, date_of_birth } = req.body
+
+  try {
+    const result = await usersService.register({ email, password, confirm_password, username, date_of_birth })
     return res.status(200).json({
       message: 'Register success',
       result
     })
   } catch (error) {
+    console.log('err', error)
     if (error instanceof MongoServerError) {
       console.log(error)
     }
