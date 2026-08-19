@@ -1,5 +1,6 @@
-import databaseServices from './services/database.services'
 import express, { NextFunction, Request, Response } from 'express'
+
+import databaseServices from './services/database.services'
 import usersRouter from './routes/users.route'
 
 const app = express()

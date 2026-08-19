@@ -1,6 +1,6 @@
 import { NextFunction, type Request, type Response } from 'express'
 import { MongoServerError } from 'mongodb'
-import { LoginReqBody, RegisterReqBody } from '~/requests/User.requests'
+import { LoginReqBody, RegisterReqBody } from '~/models/requests/User.requests'
 import usersService from '~/services/users.services'
 
 export const loginController = async (req: Request<{}, {}, LoginReqBody>, res: Response) => {

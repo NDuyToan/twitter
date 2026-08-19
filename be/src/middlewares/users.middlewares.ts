@@ -26,7 +26,7 @@ export const registerValidator = checkSchema({
       errorMessage: 'Name is required'
     },
     trim: true,
-    isString: true,
+    isString: true
   },
   email: {
     isEmail: {
@@ -43,8 +43,7 @@ export const registerValidator = checkSchema({
           throw new Error('Email already exist')
         }
         return true
-      },
-
+      }
     }
   },
   password: {
@@ -63,7 +62,8 @@ export const registerValidator = checkSchema({
         minNumbers: 1,
         minSymbols: 1
       },
-      errorMessage: 'Password must be at least 6 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character'
+      errorMessage:
+        'Password must be at least 6 characters long and contain at least one lowercase letter, one uppercase letter, one number, and one special character'
     }
   },
   confirm_password: {
@@ -81,7 +81,7 @@ export const registerValidator = checkSchema({
     isISO8601: {
       options: {
         strict: true,
-        strictSeparator: true,
+        strictSeparator: true
       },
       errorMessage: 'Date of birth must be a valid date'
     }
